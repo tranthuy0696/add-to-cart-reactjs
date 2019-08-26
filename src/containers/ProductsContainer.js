@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import Products from './../components/Products'
 import Product from './../components/Product'
+import {addToCart, actChangeMessage} from './../actions/index'
+
 class ProductsContainer extends Component {
   render() {
     const {products} = this.props
@@ -14,8 +16,9 @@ class ProductsContainer extends Component {
 
   showProducts(products) {
     let result = null
+    let {onAddToCart, onChangeMessage} = this.props
     result = products.map((product, index) => {
-        return <Product key={index} product={product}/>
+        return <Product key={index} product={product} onAddToCart = {onAddToCart} onChangeMessage = {onChangeMessage}/>
       })
     return result
   }
@@ -27,4 +30,15 @@ const mapStateToProps = state => {
     products: state.products
   }
 }
-export default connect(mapStateToProps, null)(ProductsContainer)
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onAddToCart: (product) => {
+      dispatch(addToCart(product, 1))
+    },
+    onChangeMessage: (message) => {
+      dispatch(actChangeMessage(message))
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsContainer)
